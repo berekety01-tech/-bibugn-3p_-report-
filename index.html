@@ -76,4 +76,226 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">ፋይሎች ወይም ፎቶዎች አያይዝ (ብዙ በአንድ ላይ መምረጥ ይቻላል)</label>
-                        <input type
+                        <input type="file" id="reportFiles" multiple accept=".pdf,.doc,.docx,image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
+
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg text-sm shadow-md transition">
+                        ሪፖርት እና ፋይሎች በራስ-ሰር ሰዓት ላክ
+                    </button>
+                </form>
+
+                <div id="feedbackBox" class="hidden p-3 rounded-lg text-xs mt-3"></div>
+            </div>
+
+            <!-- 2. Admin View (Protected) -->
+            <div id="view-admin" class="hidden space-y-4">
+                <div class="bg-amber-50 p-3 rounded-lg flex justify-between items-center">
+                    <div>
+                        <h2 class="font-bold text-sm text-amber-800">የአድሚን መቆጣጠሪያ ፓነል</h2>
+                        <p class="text-xs text-amber-600">የተቋማትን ሪፖርቶች እና ነጥቦች መከታተያ</p>
+                    </div>
+                    <button type="button" onclick="logoutAdmin()" class="bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg shadow">ውጣ</button>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <span id="reportCount" class="text-xs font-bold text-slate-600">ቀረበ: 0 ሪፖርቶች</span>
+                    <button type="button" onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-2 rounded-lg font-semibold shadow">
+                        📊 ወደ Excel አውርድ
+                    </button>
+                </div>
+
+                <div id="adminReportsList" class="space-y-3 max-h-[60vh] overflow-y-auto">
+                    <p class="text-center text-xs text-slate-400 py-6">ምንም ሪፖርት አልገባም</p>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-slate-100 p-3 text-center text-xs text-slate-500 border-t mt-auto">
+            የቢቡኝ ወረዳ የፖለቲካ እና አቅም ግንባታ ፅ/ቤት © 2019 ዓ.ም
+        </footer>
+    </div>
+
+    <!-- Firebase & Logic Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCmuA0TiYr9MegsGlglEOP2D5jLnKYQPg",
+            authDomain: "beki-report.firebaseapp.com",
+            projectId: "beki-report",
+            storageBucket: "beki-report.firebasestorage.app",
+            messagingSenderId: "268458229018",
+            appId: "1:268458229018:web:41267c7fd277aefdd340a3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.submitReport = async function(event) {
+            event.preventDefault();
+            const btn = event.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = "በመላክ ላይ...";
+
+            const feedbackBox = document.getElementById('feedbackBox');
+            const now = new Date();
+            const currentHour = now.getHours();
+
+            let timeSlot = "on-time";
+            let statusText = "ከሰዓት 06:30 - 08:00 (በሰዓቱ)";
+            
+            if (currentHour < 12 || currentHour > 15) {
+                timeSlot = "late";
+                statusText = "ከዚህ ሰዓት ውጪ (ዘግይቶ የተላከ - ከነጥብ ውጪ)";
+            }
+
+            try {
+                const fileInput = document.getElementById('reportFiles');
+                let filesArray = [];
+
+                if (fileInput.files.length > 0) {
+                    for (let i = 0; i < fileInput.files.length; i++) {
+                        const file = fileInput.files[i];
+                        const base64Data = await new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = (e) => resolve(e.target.result);
+                            reader.readAsDataURL(file);
+                        });
+                        filesArray.push({ name: file.name, data: base64Data });
+                    }
+                }
+
+                await addDoc(collection(db, "reports"), {
+                    institution: document.getElementById('instName').value,
+                    text: document.getElementById('reportText').value,
+                    timeSlot: timeSlot,
+                    statusText: statusText,
+                    files: filesArray,
+                    timestamp: new Date().toISOString()
+                });
+
+                feedbackBox.classList.remove('hidden');
+                if (timeSlot === 'on-time') {
+                    feedbackBox.className = "p-3 rounded-lg text-xs mt-3 bg-emerald-50 text-emerald-800 border border-emerald-200";
+                    feedbackBox.innerHTML = `✅ <b>እናመሰግናለን!</b> ሪፖርቱ በሰዓቱ ደርሷል (አረንጓዴ ቲክ ተመዝግቧል)።`;
+                } else {
+                    feedbackBox.className = "p-3 rounded-lg text-xs mt-3 bg-amber-50 text-amber-800 border border-amber-200";
+                    feedbackBox.innerHTML = `‼️ <b>ማስጠንቀቂያ፡</b> ሪፖርቱ ዘግይቶ ስለተላከ ተቀባይነት አግኝቷል ነገር ግን ከነጥብ ውጪ ሆኗል።`;
+                }
+
+                document.getElementById('reportForm').reset();
+            } catch (error) {
+                alert("ተልኮ አልተሳካም: " + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "ሪፖርት እና ፋይሎች በራስ-ሰር ሰዓት ላክ";
+            }
+        }
+
+        window.loadAdminReports = async function() {
+            const listContainer = document.getElementById('adminReportsList');
+            listContainer.innerHTML = '<p class="text-center text-xs text-slate-400 py-6">ሪፖርቶች በመጫን ላይ...</p>';
+
+            try {
+                const q = query(collection(db, "reports"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                listContainer.innerHTML = '';
+                let count = 0;
+
+                querySnapshot.forEach((docSnap) => {
+                    count++;
+                    const data = docSnap.data();
+                    const dateStr = new Date(data.timestamp).toLocaleString();
+
+                    let statusBadge = data.timeSlot === 'on-time' 
+                        ? '<span class="text-emerald-600 font-bold">✅ በሰዓቱ (ቲክ የተደረገ - 1 ነጥብ)</span>' 
+                        : '<span class="text-amber-600 font-bold">‼️ ዘግይቶ የገባ (ከነጥብ ውጪ - 0 ነጥብ)</span>';
+
+                    let filesSection = '';
+                    if (data.files && data.files.length > 0) {
+                        filesSection = '<div class="mt-2 space-y-1">';
+                        data.files.forEach(file => {
+                            filesSection += `<a href="${file.data}" download="${file.name}" target="_blank" class="inline-block mr-2 mb-1 bg-blue-50 text-blue-700 text-xs px-2.5 py-1 rounded font-semibold border border-blue-200">📥 አውርድ: ${file.name}</a>`;
+                        });
+                        filesSection += '</div>';
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = "bg-white p-3 rounded-lg border shadow-sm text-xs space-y-1";
+                    card.innerHTML = `
+                        <div class="flex justify-between font-bold text-blue-900">
+                            <span>${data.institution}</span>
+                            <span class="text-slate-400 font-normal">${dateStr}</span>
+                        </div>
+                        <p class="text-slate-700 bg-slate-50 p-2 rounded mt-1">${data.text}</p>
+                        <div class="text-[11px] font-medium">${statusBadge}</div>
+                        ${filesSection}
+                    `;
+                    listContainer.appendChild(card);
+                });
+
+                document.getElementById('reportCount').textContent = `ቀረበ: ${count} ሪፖርቶች`;
+                if (count === 0) {
+                    listContainer.innerHTML = '<p class="text-center text-xs text-slate-400 py-6">ምንም ሪፖርት አልገባም</p>';
+                }
+            } catch (error) {
+                listContainer.innerHTML = `<p class="text-center text-xs text-red-500 py-6">ስህተት ተፈጥሯል: ${error.message}</p>`;
+            }
+        }
+
+        window.exportToExcel = function() {
+            let tableHTML = `<table border="1"><tr><th>ተቋም</th><th>የአፈጻጸም ማስታወሻ</th><th>የሰዓት ሁኔታ / ነጥብ</th><th>የተላከበት ቀንና ሰዓት</th></tr>`;
+            
+            document.querySelectorAll('#adminReportsList > div').forEach(card => {
+                const title = card.querySelector('.font-bold').innerText;
+                const dateStr = card.querySelector('.text-slate-400').innerText;
+                const text = card.querySelector('p').innerText;
+                const status = card.querySelector('.font-medium').innerText;
+                tableHTML += `<tr><td>${title}</td><td>${text}</td><td>${status}</td><td>${dateStr}</td></tr>`;
+            });
+            tableHTML += `</table>`;
+
+            const blob = new Blob([tableHTML], { type: 'application/vnd.ms-excel' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Bibugn_Performance_Reports_${new Date().toISOString().slice(0,10)}.xls`;
+            a.click();
+        }
+    </script>
+
+    <script>
+        window.switchTab = function(tab) {
+            if (tab === 'institution') {
+                document.getElementById('view-institution').classList.remove('hidden');
+                document.getElementById('view-admin').classList.add('hidden');
+                document.getElementById('btn-institution').className = "flex-1 py-2 text-center border-b-2 border-blue-600 text-blue-600 font-bold";
+                document.getElementById('btn-admin').className = "flex-1 py-2 text-center text-slate-500 hover:text-blue-600";
+            }
+        }
+
+        window.requestAdminAccess = function() {
+            const pass = prompt("እባክዎ የአድሚን ሚስጥራዊ ቁጥር (Password) ያስገቡ፡");
+            if (pass === "marshet0458") {
+                document.getElementById('view-institution').classList.add('hidden');
+                document.getElementById('view-admin').classList.remove('hidden');
+                document.getElementById('btn-admin').className = "flex-1 py-2 text-center border-b-2 border-blue-600 text-blue-600 font-bold";
+                document.getElementById('btn-institution').className = "flex-1 py-2 text-center text-slate-500 hover:text-blue-600";
+                if (typeof window.loadAdminReports === 'function') {
+                    window.loadAdminReports();
+                }
+            } else if (pass !== null) {
+                alert("የገባው ሚስጥራዊ ቁጥር ስህተት ነው!");
+            }
+        }
+
+        window.logoutAdmin = function() {
+            switchTab('institution');
+        }
+    </script>
+</body>
+</html>
