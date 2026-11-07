@@ -22,7 +22,7 @@
             <!-- Tab Switcher -->
             <div class="flex border-b mb-4 text-sm font-medium">
                 <button onclick="switchTab('institution')" id="btn-institution" class="flex-1 py-2 text-center border-b-2 border-blue-600 text-blue-600 font-medium">ለተቋማት (ሪፖርት መላኪያ)</button>
-                <button onclick="switchTab('admin')" id="btn-admin" class="flex-1 py-2 text-center text-slate-500 font-medium">ለአድሚን (መቆጣጠሪያ)</button>
+                <button onclick="requestAdminAccess()" id="btn-admin" class="flex-1 py-2 text-center text-slate-500 font-medium">ለአድሚን (መቆጣጠሪያ)</button>
             </div>
 
             <!-- 1. Institution Form View -->
@@ -37,35 +37,35 @@
                         <label class="block text-xs font-semibold text-slate-600 mb-1">ተቋም ይምረጡ (29 ተቋማት)</label>
                         <select id="instName" required class="w-full p-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500 bg-white">
                             <option value="">-- ተቋም ይምረጡ --</option>
-                            <option value="እንስሳት እና አሳ ሀብት ፅ/ቤት">1. እንስሳት እና አሳ ሀብት ፅ/ቤት</option>
-                            <option value="ግብርና ፅ/ቤት">2. ግብርና ፅ/ቤት</option>
-                            <option value="መንገድ፣ ትራንስፖርት እና ሎጀስቲክ ፅ/ቤት">3. መንገድ፣ ትራንስፖርት እና ሎጀስቲክ ፅ/ቤት</option>
-                            <option value="ውሃና ኢነርጅ ልማት ፅ/ቤት">4. ውሃና ኢነርጅ ልማት ፅ/ቤት</option>
-                            <option value="መሬት ፅ/ቤት">5. መሬት ፅ/ቤት</option>
-                            <option value="አካባቢ ጥበቃ ተ/ ፅ/ቤት">6. አካባቢ ጥበቃ ተ/ ፅ/ቤት</option>
-                            <option value="ድጎ ፅዮን መሪ ማዘጋጃ ቤት">7. ድጎ ፅዮን መሪ ማዘጋጃ ቤት</option>
-                            <option value="አስተዳደር ፅ/ቤት">8. አስተዳደር ፅ/ቤት</option>
-                            <option value="ፕላንና ልማት ፅ/ቤት">9. ፕላንና ልማት ፅ/ቤት</option>
-                            <option value="ሰላምና ፀጥታ ፅ/ቤት">10. ሰላምና ፀጥታ ፅ/ቤት</option>
-                            <option value="ምክር ቤት ፅ/ቤት">11. ምክር ቤት ፅ/ቤት</option>
-                            <option value="ፍትህ ፅ/ቤት">12. ፍትህ ፅ/ቤት</option>
-                            <option value="ሴ/ህ/ወ/ማ/ ፅ/ቤት">13. ሴ/ህ/ወ/ማ/ ፅ/ቤት</option>
-                            <option value="ሚሊሻ ፅ/ቤት">14. ሚሊሻ ፅ/ቤት</option>
-                            <option value="ኢንዱስትሪ እና ኢንቨስትመንት ፅ/ቤት">15. ኢንዱስትሪ እና ኢንቨስትመንት ፅ/ቤት</option>
-                            <option value="ከተማ ልማት ፅ/ቤት">16. ከተማ ልማት ፅ/ቤት</option>
-                            <option value="ኢንስፔክሽን እና ስነ ምግባር ኮሚሽን">17. ኢንስፔክሽን እና ስነ ምግባር ኮሚሽን</option>
-                            <option value="ወጣት ክንፍ">18. ወጣት ክንፍ</option>
-                            <option value="ሴት ክንፍ">19. ሴት ክንፍ</option>
-                            <option value="ትምህርት ፅ/ቤት">20. ትምህርት ፅ/ቤት</option>
-                            <option value="ጤና ፅ/ቤት">21. ጤና ፅ/ቤት</option>
-                            <option value="ሲቪል ሰርቪስ ፅ/ቤት">22. ሲቪል ሰርቪስ ፅ/ቤት</option>
-                            <option value="ባህል፣ ቱሪዝምና ስፖርት ፅ/ቤት">23. ባህል፣ ቱሪዝምና ስፖርት ፅ/ቤት</option>
-                            <option value="ገንዘብ ፅ/ቤት">24. ገንዘብ ፅ/ቤት</option>
-                            <option value="ስራና ክህሎት ፅ/ቤት">25. ስራና ክህሎት ፅ/ቤት</option>
-                            <option value="ገቢዎች ፅ/ቤት">26. ገቢዎች ፅ/ቤት</option>
-                            <option value="የመንግስት ኮሚኒኬሽን ፅ/ቤት">27. የመንግስት ኮሚኒኬሽን ፅ/ቤት</option>
-                            <option value="ንግድና ገቢያ ልማት ፅ/ቤት">28. ንግድና ገቢያ ልማት ፅ/ቤት</option>
-                            <option value="ህብረት ስራ ማህበራት ተ/ፅ/ቤት">29. ህብረት ስራ ማህበራት ተ/ፅ/ቤት</option>
+                            <option value="1. እንስሳት እና አሳ ሀብት ፅ/ቤት">1. እንስሳት እና አሳ ሀብት ፅ/ቤት</option>
+                            <option value="2. ግብርና ፅ/ቤት">2. ግብርና ፅ/ቤት</option>
+                            <option value="3. መንገድ፣ ትራንስፖርት እና ሎጀስቲክ ፅ/ቤት">3. መንገድ፣ ትራንስፖርት እና ሎጀስቲክ ፅ/ቤት</option>
+                            <option value="4. ውሃና ኢነርጅ ልማት ፅ/ቤት">4. ውሃና ኢነርጅ ልማት ፅ/ቤት</option>
+                            <option value="5. መሬት ፅ/ቤት">5. መሬት ፅ/ቤት</option>
+                            <option value="6. አካባቢ ጥበቃ ተ/ ፅ/ቤት">6. አካባቢ ጥበቃ ተ/ ፅ/ቤት</option>
+                            <option value="7. ድጎ ፅዮን መሪ ማዘጋጃ ቤት">7. ድጎ ፅዮን መሪ ማዘጋጃ ቤት</option>
+                            <option value="8. አስተዳደር ፅ/ቤት">8. አስተዳደር ፅ/ቤት</option>
+                            <option value="9. ፕላንና ልማት ፅ/ቤት">9. ፕላንና ልማት ፅ/ቤት</option>
+                            <option value="10. ሰላምና ፀጥታ ፅ/ቤት">10. ሰላምና ፀጥታ ፅ/ቤት</option>
+                            <option value="11. ምክር ቤት ፅ/ቤት">11. ምክር ቤት ፅ/ቤት</option>
+                            <option value="12. ፍትህ ፅ/ቤት">12. ፍትህ ፅ/ቤት</option>
+                            <option value="13. ሴ/ህ/ወ/ማ/ ፅ/ቤት">13. ሴ/ህ/ወ/ማ/ ፅ/ቤት</option>
+                            <option value="14. ሚሊሻ ፅ/ቤት">14. ሚሊሻ ፅ/ቤት</option>
+                            <option value="15. ኢንዱስትሪ እና ኢንቨስትመንት ፅ/ቤት">15. ኢንዱስትሪ እና ኢንቨስትመንት ፅ/ቤት</option>
+                            <option value="16. ከተማ ልማት ፅ/ቤት">16. ከተማ ልማት ፅ/ቤት</option>
+                            <option value="17. ኢንስፔክሽን እና ስነ ምግባር ኮሚሽን">17. ኢንስፔክሽን እና ስነ ምግባር ኮሚሽን</option>
+                            <option value="18. ወጣት ክንፍ">18. ወጣት ክንፍ</option>
+                            <option value="19. ሴት ክንፍ">19. ሴት ክንፍ</option>
+                            <option value="20. ትምህርት ፅ/ቤት">20. ትምህርት ፅ/ቤት</option>
+                            <option value="21. ጤና ፅ/ቤት">21. ጤና ፅ/ቤት</option>
+                            <option value="22. ሲቪል ሰርቪስ ፅ/ቤት">22. ሲቪል ሰርቪስ ፅ/ቤት</option>
+                            <option value="23. ባህል፣ ቱሪዝምና ስፖርት ፅ/ቤት">23. ባህል፣ ቱሪዝምና ስፖርት ፅ/ቤት</option>
+                            <option value="24. ገንዘብ ፅ/ቤት">24. ገንዘብ ፅ/ቤት</option>
+                            <option value="25. ስራና ክህሎት ፅ/ቤት">25. ስራና ክህሎት ፅ/ቤት</option>
+                            <option value="26. ገቢዎች ፅ/ቤት">26. ገቢዎች ፅ/ቤት</option>
+                            <option value="27. የመንግስት ኮሚኒኬሽን ፅ/ቤት">27. የመንግስት ኮሚኒኬሽን ፅ/ቤት</option>
+                            <option value="28. ንግድና ገቢያ ልማት ፅ/ቤት">28. ንግድና ገቢያ ልማት ፅ/ቤት</option>
+                            <option value="29. ህብረት ስራ ማህበራት ተ/ፅ/ቤት">29. ህብረት ስራ ማህበራት ተ/ፅ/ቤት</option>
                         </select>
                     </div>
 
@@ -74,7 +74,6 @@
                         <textarea id="reportText" required rows="3" class="w-full p-2.5 text-sm border rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="ዋና ዋና የተከናወኑ ስራዎችን በአጭሩ ይጻፉ..."></textarea>
                     </div>
 
-                    <!-- File Upload Field -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">የሪፖርት ሰነድ ፋይል አባሪ (PDF ወይም Word)</label>
                         <input type="file" id="reportFile" accept=".pdf,.doc,.docx" required class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border rounded-lg p-1">
@@ -90,11 +89,10 @@
                     </button>
                 </form>
 
-                <!-- Feedback Box -->
                 <div id="feedbackBox" class="hidden p-3 rounded-lg text-sm mt-3"></div>
             </div>
 
-            <!-- 2. Admin View -->
+            <!-- 2. Admin View (Password Protected) -->
             <div id="view-admin" class="hidden space-y-4">
                 <div class="flex justify-between items-center bg-slate-100 p-3 rounded-lg">
                     <div>
@@ -115,7 +113,7 @@
                             </tr>
                         </thead>
                         <tbody id="adminTableBody">
-                            <!-- Dynamic rows will load here -->
+                            <tr><td colspan="4" class="p-4 text-center text-slate-400">መረጃዎች በመጫን ላይ...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -130,6 +128,16 @@
     </div>
 
     <script>
+        // Admin Password Verification (marshet0458)
+        function requestAdminAccess() {
+            let pass = prompt("እባክዎ የአድሚን ሚስጥራዊ ቁጥር (Password) ያስገቡ:");
+            if (pass === "marshet0458") {
+                switchTab('admin');
+            } else if (pass !== null) {
+                alert("የገባው ሚስጥራዊ ቃል ስህተት ነው!");
+            }
+        }
+
         // Tab switching logic
         function switchTab(tab) {
             if (tab === 'institution') {
@@ -161,18 +169,17 @@
             const fileInput = document.getElementById('reportFile');
             const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'ፋይል የለም';
 
-            // Time validation (06:30 to 08:00 check in 24hr format e.g., 12:30 to 14:00)
             let [h, m] = reportTime.split(':').map(Number);
             let totalMinutes = h * 60 + m;
-            let isOntime = (totalMinutes >= 750 && totalMinutes <= 840); // 12:30 (750m) እስከ 14:00 (840m)
+            let isOntime = (totalMinutes >= 750 && totalMinutes <= 840); // 12:30 እስከ 14:00
 
             let status = isOntime ? 'on-time' : 'late';
             let feedbackBox = document.getElementById('feedbackBox');
             feedbackBox.classList.remove('hidden');
 
-            let reports = JSON.parse(localStorage.getItem('bibugnReports') || '[]');
+            let reports = JSON.parse(localStorage.getItem('bibugnGlobalReports') || '[]');
             
-            reports.push({
+            reports.unshift({
                 instName,
                 reportText,
                 fileName,
@@ -180,14 +187,14 @@
                 status,
                 date: new Date().toLocaleDateString()
             });
-            localStorage.setItem('bibugnReports', JSON.stringify(reports));
+            localStorage.setItem('bibugnGlobalReports', JSON.stringify(reports));
 
             if (isOntime) {
                 feedbackBox.className = "p-3 rounded-lg text-sm mt-3 bg-green-100 text-green-800 border border-green-200";
-                feedbackBox.innerHTML = "✅ <b>እናመሰግናለን!</b> ሪፖርቱ እና ፋይሉ በሰዓቱ (አረንጓዴ ቲክ) ደርሰዋል። ከነጥብ ጋር ተይዟል።";
+                feedbackBox.innerHTML = "✅ <b>እናመሰግናለን!</b> ሪፖርቱ እና ፋይሉ በሰዓቱ ተልከዋል እንዲሁም ለአድሚን ደርሰዋል።";
             } else {
                 feedbackBox.className = "p-3 rounded-lg text-sm mt-3 bg-yellow-100 text-yellow-800 border border-yellow-200";
-                feedbackBox.innerHTML = "⚠️ <b>ማስጠንቀቂያ!</b> ሪፖርቱ ደርሷል ነገር ግን <b>ዘግይቶ</b> ስለተላከ ከነጥብ አልተያዘም (ቅርጸቱ ተመዝግቧል)።";
+                feedbackBox.innerHTML = "⚠️ <b>ማስጠንቀቂያ!</b> ሪፖርቱ ተልኳል ነገር ግን <b>ዘግይቶ</b> ስለተላከ በሰዓቱ እንዳልደረሰ ተመዝግቧል።";
             }
 
             document.getElementById('reportForm').reset();
@@ -196,7 +203,7 @@
         // Load Admin Data
         function loadAdminData() {
             let tbody = document.getElementById('adminTableBody');
-            let reports = JSON.parse(localStorage.getItem('bibugnReports') || '[]');
+            let reports = JSON.parse(localStorage.getItem('bibugnGlobalReports') || '[]');
             
             tbody.innerHTML = '';
             if (reports.length === 0) {
@@ -213,7 +220,7 @@
                     <td class="p-2 border text-center">${rep.status === 'on-time' ? '🟢 በሰዓቱ' : '⚠️ ዘግይቷል'}</td>
                     <td class="p-2 border text-slate-600 text-[11px]">
                         <b>ፋይል:</b> ${rep.fileName}<br>
-                        <span class="text-slate-500">${rep.reportText.substring(0, 25)}...</span>
+                        <span class="text-slate-500">${rep.reportText.substring(0, 30)}...</span>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -222,7 +229,7 @@
 
         // Export to CSV
         function exportToCSV() {
-            let reports = JSON.parse(localStorage.getItem('bibugnReports') || '[]');
+            let reports = JSON.parse(localStorage.getItem('bibugnGlobalReports') || '[]');
             if (reports.length === 0) {
                 alert("ማውረድ የሚችሏቸው መረጃዎች የሉም!");
                 return;
